@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gocolly/colly"
 )
@@ -13,10 +14,11 @@ func main() {
 		fmt.Println("Requesting")
 	})
 
-	c.OnHTML("svg", func(e *colly.HTMLElement) {
-		fmt.Print(e.Response.Save("test2.svg"))
+	c.OnHTML(".js-calendar-graph-svg", func(e *colly.HTMLElement) {
+		streak, _ := os.Create("streak.svg")
+		str, _ := e.DOM.Parent().Html()
+		streak.WriteString(str)
 	})
 
 	c.Visit("https://github.com/users/ablades/contributions")
-
 }
